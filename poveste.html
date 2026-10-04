@@ -1,0 +1,368 @@
+<!doctype html>
+<html lang="ro">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Povestea Timișoarei</title>
+<meta name="description" content="O poveste animată la derulare despre Timișoara: de la zi la noapte, de la 1212 la 2023.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,800;1,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #1d1a2b;
+    --paper: #fbf7f0;
+    --muted: #6b6478;
+    --accent: #c8553d;
+    --gold: #e9b44c;
+    --night: #0d0b1e;
+    --plum: #2b2058;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html.lenis, html.lenis body { height: auto; }
+  .lenis.lenis-smooth { scroll-behavior: auto !important; }
+  body { font-family: "Inter", system-ui, sans-serif; background: var(--night); color: #fff; line-height: 1.6; overflow-x: hidden; }
+  h1, h2, h3 { font-family: "Playfair Display", Georgia, serif; line-height: 1.1; }
+  a { color: inherit; }
+
+  .progress { position: fixed; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, var(--gold), var(--accent)); transform-origin: 0 50%; transform: scaleX(0); z-index: 60; }
+
+  nav { position: fixed; inset: 0 0 auto 0; z-index: 50; display: flex; justify-content: space-between; align-items: center; padding: 18px clamp(16px, 4vw, 48px); mix-blend-mode: difference; }
+  nav .logo { font-family: "Playfair Display", serif; font-weight: 800; font-size: 1.3rem; text-decoration: none; }
+  nav ul { list-style: none; display: flex; gap: clamp(14px, 2.5vw, 32px); }
+  nav a.link { text-decoration: none; font-weight: 500; font-size: .95rem; }
+
+  /* ---------- INTRO ---------- */
+  .intro { height: 100vh; min-height: 520px; display: grid; place-items: center; text-align: center; position: relative; overflow: hidden;
+    background: radial-gradient(ellipse at 50% 110%, #6a3a7a 0%, var(--plum) 40%, var(--night) 75%); }
+  .intro .inner { padding: 0 16px; }
+  .intro .kicker { letter-spacing: .4em; text-transform: uppercase; font-size: .78rem; opacity: .75; margin-bottom: 18px; }
+  .intro h1 { font-size: clamp(3rem, 12vw, 10rem); font-weight: 800; display: flex; flex-wrap: wrap; justify-content: center; }
+  .intro h1 .ch { display: inline-block; overflow: hidden; padding: 0 .01em .12em; }
+  .intro h1 .ch > span { display: inline-block; }
+  .intro p { font-family: "Playfair Display", serif; font-style: italic; font-size: clamp(1.1rem, 2.4vw, 1.5rem); opacity: .85; margin-top: 10px; }
+  .hint { position: absolute; bottom: 28px; left: 50%; transform: translateX(-50%); font-size: .75rem; letter-spacing: .3em; text-transform: uppercase; opacity: .7; display: flex; flex-direction: column; align-items: center; gap: 10px; }
+  .hint i { width: 22px; height: 36px; border: 2px solid rgba(255,255,255,.6); border-radius: 12px; position: relative; }
+  .hint i::after { content: ""; position: absolute; left: 50%; top: 6px; width: 4px; height: 8px; margin-left: -2px; border-radius: 2px; background: #fff; animation: wheel 1.6s infinite; }
+  @keyframes wheel { 0% { opacity: 1; transform: translateY(0); } 100% { opacity: 0; transform: translateY(12px); } }
+
+  /* ---------- SCENE: DAY TO NIGHT ---------- */
+  .scene { height: 100vh; position: relative; overflow: hidden; background: #8fd3f4; }
+  .scene svg { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+  .caps { position: absolute; left: clamp(16px, 5vw, 72px); top: clamp(80px, 16vh, 160px); width: min(420px, calc(100% - 32px)); z-index: 2; }
+  .cap { position: absolute; top: 0; left: 0; right: 0; padding: 22px 24px; border-radius: 18px; background: rgba(13,11,30,.55); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); }
+  .cap .step { font-size: .72rem; letter-spacing: .25em; text-transform: uppercase; color: var(--gold); font-weight: 600; }
+  .cap h2 { font-size: clamp(1.5rem, 3vw, 2.2rem); margin: 6px 0 8px; }
+  .cap p { opacity: .88; }
+  .cap .counter { font-family: "Playfair Display", serif; font-weight: 800; font-size: clamp(3rem, 7vw, 4.6rem); color: var(--gold); line-height: 1; display: block; margin-top: 4px; }
+
+  /* ---------- HORIZONTAL TIMELINE ---------- */
+  .hz { position: relative; overflow: hidden; background: var(--paper); color: var(--ink); }
+  .hz-head { position: absolute; top: clamp(70px, 12vh, 110px); left: clamp(16px, 5vw, 72px); z-index: 2; }
+  .hz-head .kicker { color: var(--accent); letter-spacing: .25em; text-transform: uppercase; font-size: .75rem; font-weight: 600; }
+  .hz-head h2 { font-size: clamp(1.6rem, 3.4vw, 2.6rem); }
+  .track { display: flex; height: 100vh; width: max-content; }
+  .panel { width: min(78vw, 720px); height: 100%; flex: none; display: flex; flex-direction: column; justify-content: center; padding: 120px clamp(24px, 4vw, 56px) 60px; position: relative; overflow: hidden; }
+  .panel:first-child { margin-left: clamp(16px, 5vw, 72px); }
+  .panel .year { font-family: "Playfair Display", serif; font-weight: 800; font-size: clamp(5rem, 16vw, 13rem); line-height: .9; color: transparent; -webkit-text-stroke: 2px var(--accent); white-space: nowrap; }
+  .panel h3 { font-size: clamp(1.4rem, 2.6vw, 2rem); margin: 18px 0 8px; }
+  .panel p { color: var(--muted); max-width: 440px; font-size: 1.05rem; }
+  .panel::before { content: ""; position: absolute; left: 0; top: 22%; bottom: 22%; width: 1px; background: #e2d8c6; }
+  .panel:first-child::before { display: none; }
+  .hz-bar { position: absolute; left: clamp(16px, 5vw, 72px); right: clamp(16px, 5vw, 72px); bottom: 36px; height: 2px; background: #e2d8c6; }
+  .hz-bar span { display: block; height: 100%; background: var(--accent); transform-origin: 0 50%; transform: scaleX(0); }
+
+  /* ---------- WORD REVEAL ---------- */
+  .words { min-height: 100vh; display: grid; place-items: center; padding: 80px 16px; background: var(--night); }
+  .words p { max-width: 980px; font-family: "Playfair Display", serif; font-size: clamp(1.8rem, 4.6vw, 3.8rem); line-height: 1.22; font-weight: 600; }
+  .words .w { opacity: .14; }
+  .words .w.hl { color: var(--gold); }
+
+  /* ---------- ZOOM ---------- */
+  .zoom { height: 100vh; position: relative; overflow: hidden; background: linear-gradient(180deg, #2b2058 0%, #6a3a7a 40%, #e07a5f 75%, #f4c27a 100%); }
+  .zoom .final { position: absolute; inset: 0; display: grid; place-items: center; text-align: center; padding: 0 16px; }
+  .zoom .final h2 { font-size: clamp(2.2rem, 6vw, 4.6rem); text-shadow: 0 6px 30px rgba(30,10,60,.35); }
+  .zoom .final p { font-size: clamp(1rem, 2vw, 1.25rem); opacity: .92; margin: 12px auto 28px; max-width: 560px; }
+  .zoom .btns { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+  .btn { display: inline-block; padding: 13px 26px; border-radius: 999px; font-weight: 600; text-decoration: none; background: #fff; color: var(--ink); transition: transform .2s; }
+  .btn:hover { transform: translateY(-2px); }
+  .btn.alt { background: transparent; color: #fff; border: 2px solid rgba(255,255,255,.8); }
+  .zoom .cover { position: absolute; inset: 0; background: var(--night); display: grid; place-items: center; overflow: hidden; }
+  .zoom .big { font-family: "Playfair Display", serif; font-weight: 800; font-size: 19vw; line-height: 1; letter-spacing: -.02em; white-space: nowrap;
+    background: linear-gradient(180deg, #f4c27a, #e07a5f 50%, #6a3a7a); -webkit-background-clip: text; background-clip: text; color: transparent; will-change: transform; }
+
+  footer { background: var(--night); color: rgba(255,255,255,.7); text-align: center; padding: 40px 16px; font-size: .9rem; }
+  footer a { color: var(--gold); }
+
+  /* Without motion: show every state statically */
+  @media (prefers-reduced-motion: reduce) {
+    .track { flex-direction: column; width: auto; height: auto; padding-top: 160px; }
+    .panel { width: auto; height: auto; padding-block: 40px; }
+    .panel::before, .hz-bar { display: none; }
+    .words .w { opacity: 1; }
+    .zoom .cover { display: none; }
+    .hint i::after { animation: none; }
+  }
+</style>
+</head>
+<body>
+<div class="progress" id="progress"></div>
+
+<nav>
+  <a class="logo" href="index.html">Timișoara</a>
+  <ul>
+    <li><a class="link" href="index.html">Acasă</a></li>
+    <li><a class="link" href="blog.html">Blog</a></li>
+  </ul>
+</nav>
+
+<!-- ================= INTRO ================= -->
+<header class="intro" id="intro">
+  <div class="inner">
+    <div class="kicker">O poveste la derulare</div>
+    <h1 id="title">Timișoara</h1>
+    <p>de la zi la noapte, de la 1212 la azi</p>
+  </div>
+  <div class="hint"><i></i>Derulează</div>
+</header>
+
+<!-- ================= SCENE ================= -->
+<section class="scene" id="scene" aria-label="Orașul trece de la zi la noapte">
+  <svg viewBox="0 0 1600 900" preserveAspectRatio="xMidYMax slice" id="scene-svg" aria-hidden="true">
+    <defs>
+      <linearGradient id="g-day" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#5fb8e8"/><stop offset="1" stop-color="#d6f0ff"/></linearGradient>
+      <linearGradient id="g-dusk" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2b2058"/><stop offset=".45" stop-color="#8a3f7a"/><stop offset=".8" stop-color="#e07a5f"/><stop offset="1" stop-color="#f4c27a"/></linearGradient>
+      <linearGradient id="g-night" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#05040f"/><stop offset=".7" stop-color="#141236"/><stop offset="1" stop-color="#2a2160"/></linearGradient>
+      <radialGradient id="g-glow"><stop offset="0" stop-color="#fff2c4"/><stop offset=".3" stop-color="#ffd27a" stop-opacity=".7"/><stop offset="1" stop-color="#ffd27a" stop-opacity="0"/></radialGradient>
+      <radialGradient id="g-sun"><stop offset="0" stop-color="#fff7d6"/><stop offset=".55" stop-color="#ffd76e"/><stop offset="1" stop-color="#ffd76e" stop-opacity="0"/></radialGradient>
+    </defs>
+    <rect width="1600" height="900" fill="url(#g-day)"/>
+    <rect id="sky-dusk" width="1600" height="900" fill="url(#g-dusk)" opacity="0"/>
+    <rect id="sky-night" width="1600" height="900" fill="url(#g-night)" opacity="0"/>
+    <g id="stars" opacity="0" fill="#fff"></g>
+    <circle id="moon" cx="1440" cy="300" r="42" fill="#f6efd9" opacity="0"/>
+    <circle id="sun" cx="1220" cy="190" r="120" fill="url(#g-sun)"/>
+    <g id="clouds" fill="#fff" opacity=".75">
+      <ellipse cx="260" cy="230" rx="150" ry="26"/><ellipse cx="330" cy="208" rx="80" ry="28"/>
+      <ellipse cx="1020" cy="140" rx="180" ry="24"/><ellipse cx="1100" cy="120" rx="90" ry="26"/>
+      <ellipse cx="720" cy="300" rx="120" ry="18"/>
+    </g>
+    <path id="far" fill="#b9c7dd" d="M0 770V600h70v-50h60v70h50v-100h40l15-30 15 30h40v120h80v-80h90v-40h30v40h70v130h60v-90h100v-30h40v30h50v100h70V560h40l20-50 20 50h40v120h90v-70h80v-50h60v50h60v100h70v-130h50v-30h40v30h40v150h80v-90h70v110h70v100z"/>
+    <g id="city" fill="#8f86ab"></g>
+    <g id="windows" fill="#ffd27a"></g>
+    <rect y="770" width="1600" height="40" fill="#3b3550" id="street"/>
+    <rect y="810" width="1600" height="90" fill="#4a6c8c" id="river"/>
+    <g id="reflections" stroke="#ffd27a" stroke-width="4" stroke-linecap="round" opacity="0"></g>
+    <g id="lamps"></g>
+  </svg>
+  <div class="caps">
+    <div class="cap" id="cap1"><div class="step">Ziua</div><h2>Orașul florilor</h2><p>Piețe baroce, palate secession și parcuri pline de trandafiri pe malul Begăi.</p></div>
+    <div class="cap" id="cap2"><div class="step">12 noiembrie 1884</div><h2>Se lasă seara…</h2><p>Felinarele cu gaz se sting pentru ultima oară. Orașul așteaptă ceva ce Europa n-a mai văzut.</p></div>
+    <div class="cap" id="cap3"><div class="step">Prima în Europa</div><h2>Lumina electrică</h2><span class="counter" id="lamp-count">0</span><p>lămpi electrice aprind străzile Timișoarei.</p></div>
+  </div>
+</section>
+
+<!-- ================= HORIZONTAL TIMELINE ================= -->
+<section class="hz" id="hz">
+  <div class="hz-head"><div class="kicker">Cronologie</div><h2>Opt secole, într-o derulare</h2></div>
+  <div class="track" id="track">
+    <article class="panel"><div class="year">1212</div><h3>Prima atestare</h3><p>Castrum Temesiensis apare în documente, ridicat pe un teritoriu mlăștinos, greu de cucerit.</p></article>
+    <article class="panel"><div class="year">1552</div><h3>Sub semilună</h3><p>Cetatea cade sub otomani și devine centrul unui pașalâc pentru 164 de ani.</p></article>
+    <article class="panel"><div class="year">1716</div><h3>Era habsburgică</h3><p>Eugeniu de Savoia cucerește orașul. Începe construcția „Micii Viene”.</p></article>
+    <article class="panel"><div class="year">1884</div><h3>Orașul luminilor</h3><p>Primul iluminat public electric pe străzi din Europa.</p></article>
+    <article class="panel"><div class="year">1989</div><h3>Libertate</h3><p>Pe 16 decembrie, din Timișoara pornește Revoluția Română.</p></article>
+    <article class="panel"><div class="year">2023</div><h3>Capitală Europeană a Culturii</h3><p>„Luminează orașul prin tine!” — un an întreg de cultură și lumină.</p></article>
+  </div>
+  <div class="hz-bar"><span id="hz-bar"></span></div>
+</section>
+
+<!-- ================= WORDS ================= -->
+<section class="words" id="words">
+  <p id="words-p">Timișoara nu se vizitează — se <em>descoperă</em>. Piață cu piață, poveste cu poveste, de la prima <em>lumină</em> din 1884 până la strigătul de <em>libertate</em> din 1989.</p>
+</section>
+
+<!-- ================= ZOOM ================= -->
+<section class="zoom" id="zoom">
+  <div class="final" id="final">
+    <div>
+      <h2>Bine ai venit în Timișoara</h2>
+      <p>Orașul florilor, al luminilor și al libertății te așteaptă.</p>
+      <div class="btns"><a class="btn" href="index.html">Descoperă orașul</a><a class="btn alt" href="blog.html">Citește blogul</a></div>
+    </div>
+  </div>
+  <div class="cover" id="cover"><div class="big" id="big">TIMIȘOARA</div></div>
+</section>
+
+<footer><a href="index.html">Acasă</a> · <a href="blog.html">Blog</a></footer>
+
+<script src="assets/vendor/gsap.min.js"></script>
+<script src="assets/vendor/ScrollTrigger.min.js"></script>
+<script src="assets/vendor/lenis.min.js"></script>
+<script>
+(() => {
+  const NS = 'http://www.w3.org/2000/svg';
+  const $ = id => document.getElementById(id);
+  const svgEl = (tag, attrs, parent) => {
+    const el = document.createElementNS(NS, tag);
+    for (const k in attrs) el.setAttribute(k, attrs[k]);
+    parent.appendChild(el);
+    return el;
+  };
+  // deterministic pseudo-random so the scene looks the same on every load
+  let seed = 7;
+  const rand = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+
+  // ---------- build the city ----------
+  const GROUND = 770;
+  const city = $('city'), wins = $('windows'), stars = $('stars'), lamps = $('lamps'), refl = $('reflections');
+
+  function windowsIn(x, y, w, h) {
+    for (let cy = y + 22; cy < GROUND - 30; cy += 38)
+      for (let cx = x + 14; cx < x + w - 18; cx += 26)
+        if (rand() < .62) svgEl('rect', { x: cx, y: cy, width: 10, height: 16, rx: 2, class: 'win', opacity: 0 }, wins);
+  }
+
+  [[20, 110, 220], [140, 120, 290], [270, 30, 150], [1000, 130, 250], [1140, 100, 330], [1250, 150, 210], [1410, 90, 270], [1510, 90, 190]]
+    .forEach(([x, w, h]) => { svgEl('rect', { x, y: GROUND - h, width: w, height: h }, city); windowsIn(x, GROUND - h, w, h); });
+
+  // Opera
+  svgEl('rect', { x: 300, y: 560, width: 280, height: 210 }, city);
+  svgEl('polygon', { points: '290,564 440,500 590,564' }, city);
+  svgEl('rect', { x: 418, y: 470, width: 44, height: 40 }, city);
+  for (let i = 0; i < 6; i++) svgEl('rect', { x: 322 + i * 42, y: 600, width: 14, height: 40, class: 'win', opacity: 0 }, wins);
+  for (let i = 0; i < 6; i++) svgEl('rect', { x: 322 + i * 42, y: 670, width: 14, height: 40, class: 'win', opacity: 0 }, wins);
+
+  // Metropolitan Cathedral
+  [['rect', { x: 660, y: 560, width: 280, height: 210 }],
+   ['rect', { x: 760, y: 400, width: 80, height: 170 }],
+   ['polygon', { points: '752,405 800,220 848,405' }],
+   ['rect', { x: 796, y: 190, width: 8, height: 40 }], ['rect', { x: 786, y: 202, width: 28, height: 6 }],
+   ['rect', { x: 680, y: 480, width: 54, height: 90 }], ['polygon', { points: '672,484 707,380 742,484' }],
+   ['rect', { x: 866, y: 480, width: 54, height: 90 }], ['polygon', { points: '858,484 893,380 928,484' }],
+   ['polygon', { points: '660,564 800,490 940,564' }]]
+    .forEach(([t, a]) => svgEl(t, a, city));
+  svgEl('circle', { cx: 800, cy: 620, r: 24, class: 'win', opacity: 0 }, wins);
+  [[783, 430], [807, 430], [700, 505], [886, 505]].forEach(([x, y]) => svgEl('rect', { x, y, width: 12, height: 26, rx: 6, class: 'win', opacity: 0 }, wins));
+
+  // Trees between buildings
+  [[600, 735, 34], [630, 720, 40], [965, 728, 36], [985, 742, 28]].forEach(([cx, cy, r]) => svgEl('circle', { cx, cy, r }, city));
+
+  // Stars
+  for (let i = 0; i < 90; i++) svgEl('circle', { cx: rand() * 1600, cy: rand() * 480, r: rand() * 1.6 + .4, opacity: rand() * .7 + .3 }, stars);
+
+  // Street lamps
+  for (let x = 40; x < 1600; x += 76) {
+    const g = svgEl('g', { class: 'lamp' }, lamps);
+    svgEl('rect', { x: x - 2, y: GROUND - 64, width: 4, height: 64, fill: '#2a2440' }, g);
+    svgEl('rect', { x: x - 7, y: GROUND - 72, width: 14, height: 10, rx: 3, fill: '#2a2440' }, g);
+    svgEl('circle', { cx: x, cy: GROUND - 66, r: 44, fill: 'url(#g-glow)', class: 'glow', opacity: 0 }, g);
+    svgEl('line', { x1: x - 14, y1: 840 + (x % 3) * 14, x2: x + 14, y2: 840 + (x % 3) * 14 }, refl);
+  }
+
+  // ---------- split text helpers ----------
+  const title = $('title');
+  title.innerHTML = [...title.textContent].map(c => `<span class="ch"><span>${c}</span></span>`).join('');
+  const wp = $('words-p');
+  wp.innerHTML = wp.innerHTML.split(/(<em>.*?<\/em>|\s+)/).filter(Boolean).map(part => {
+    if (/^\s+$/.test(part)) return ' ';
+    const em = part.match(/^<em>(.*)<\/em>$/);
+    return em ? `<span class="w hl">${em[1]}</span>` : `<span class="w">${part}</span>`;
+  }).join('');
+
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  gsap.registerPlugin(ScrollTrigger);
+
+  if (reduce) {
+    // Static end state: night city with every light on
+    gsap.set(['#sky-night', '#stars', '#moon', '.win', '.glow', '#reflections'], { opacity: 1 });
+    gsap.set('#sun', { opacity: 0 });
+    gsap.set('#city', { fill: '#1a1530' });
+    gsap.set('#far', { fill: '#2a2550' });
+    gsap.set(['#cap1', '#cap2'], { autoAlpha: 0 });
+    $('lamp-count').textContent = '731';
+    return;
+  }
+
+  // ---------- smooth scroll ----------
+  const lenis = new Lenis({ lerp: 0.09 });
+  lenis.on('scroll', ScrollTrigger.update);
+  gsap.ticker.add(t => lenis.raf(t * 1000));
+  gsap.ticker.lagSmoothing(0);
+  document.querySelectorAll('a[href^="#"]').forEach(a => a.addEventListener('click', e => { e.preventDefault(); lenis.scrollTo(a.getAttribute('href')); }));
+
+  gsap.to('#progress', { scaleX: 1, ease: 'none', scrollTrigger: { start: 0, end: 'max', scrub: true } });
+
+  // ---------- intro ----------
+  gsap.from('#title .ch > span', { yPercent: 115, duration: 1.2, ease: 'expo.out', stagger: .06, delay: .15 });
+  gsap.from('.intro .kicker, .intro p', { opacity: 0, y: 20, duration: 1, delay: .7, stagger: .15 });
+  gsap.to('.intro .inner', { yPercent: -40, opacity: 0, ease: 'none', scrollTrigger: { trigger: '#intro', start: 'top top', end: 'bottom top', scrub: true } });
+
+  // ---------- day to night ----------
+  gsap.set(['#cap2', '#cap3'], { autoAlpha: 0, y: 30 });
+  const count = { v: 0 };
+  const scene = gsap.timeline({
+    defaults: { ease: 'none' },
+    scrollTrigger: { trigger: '#scene', start: 'top top', end: '+=320%', scrub: 1, pin: true, anticipatePin: 1 },
+  });
+  scene
+    .to('#clouds', { x: 260, duration: 3 }, 0)
+    // day -> dusk
+    .to('#sun', { attr: { cy: 760 }, duration: 1.2 }, 0)
+    .to('#sky-dusk', { opacity: 1, duration: 1 }, 0)
+    .to('#city', { fill: '#5b2d5e', duration: 1 }, 0)
+    .to('#far', { fill: '#b45f72', duration: 1 }, 0)
+    .to('#river', { fill: '#3e2c5c', duration: 1 }, 0)
+    .to('#cap1', { autoAlpha: 0, y: -30, duration: .3 }, .55)
+    .to('#cap2', { autoAlpha: 1, y: 0, duration: .3 }, .75)
+    // dusk -> night
+    .to('#sky-night', { opacity: 1, duration: 1 }, 1.1)
+    .to('#clouds', { opacity: .12, duration: 1 }, 1.1)
+    .to(['#stars', '#moon'], { opacity: 1, duration: .8 }, 1.4)
+    .to('#city', { fill: '#1a1530', duration: 1 }, 1.1)
+    .to('#far', { fill: '#2a2550', duration: 1 }, 1.1)
+    .to('#street', { fill: '#141024', duration: 1 }, 1.1)
+    .to('#river', { fill: '#1a1740', duration: 1 }, 1.1)
+    .to('.win', { opacity: 1, duration: .05, stagger: { each: .006, from: 'random' } }, 1.4)
+    .to('#cap2', { autoAlpha: 0, y: -30, duration: .3 }, 1.9)
+    .to('#cap3', { autoAlpha: 1, y: 0, duration: .3 }, 2.05)
+    // the lamps of 1884
+    .to('.glow', { opacity: 1, duration: .12, stagger: .04 }, 2.1)
+    .to('#reflections', { opacity: .55, duration: .6 }, 2.2)
+    .to(count, { v: 731, duration: .8, onUpdate: () => { $('lamp-count').textContent = Math.round(count.v); } }, 2.1)
+    .to({}, { duration: .3 });
+
+  // ---------- horizontal timeline ----------
+  const track = $('track');
+  const distance = () => track.scrollWidth - innerWidth + Math.min(innerWidth * .05, 72);
+  const hz = gsap.to(track, {
+    x: () => -distance(), ease: 'none',
+    scrollTrigger: { trigger: '#hz', start: 'top top', end: () => '+=' + distance(), scrub: 1, pin: true, invalidateOnRefresh: true, anticipatePin: 1 },
+  });
+  gsap.to('#hz-bar', { scaleX: 1, ease: 'none', scrollTrigger: { trigger: '#hz', start: 'top top', end: () => '+=' + distance(), scrub: true } });
+  document.querySelectorAll('.panel').forEach(panel => {
+    gsap.fromTo(panel.querySelector('.year'), { xPercent: 18 }, {
+      xPercent: -18, ease: 'none',
+      scrollTrigger: { trigger: panel, containerAnimation: hz, start: 'left right', end: 'right left', scrub: true },
+    });
+    gsap.from(panel.querySelectorAll('h3, p'), {
+      opacity: 0, y: 30, stagger: .1, duration: .6,
+      scrollTrigger: { trigger: panel, containerAnimation: hz, start: 'left 70%', toggleActions: 'play none none reverse' },
+    });
+  });
+
+  // ---------- word reveal ----------
+  gsap.to('#words .w', {
+    opacity: 1, ease: 'none', stagger: .1,
+    scrollTrigger: { trigger: '#words', start: 'top top', end: '+=150%', scrub: true, pin: true },
+  });
+
+  // ---------- zoom through ----------
+  gsap.set('#final > div', { opacity: 0, y: 40 });
+  gsap.timeline({ scrollTrigger: { trigger: '#zoom', start: 'top top', end: '+=200%', scrub: 1, pin: true } })
+    .to('#big', { scale: 26, ease: 'power2.in', duration: 1 })
+    .to('#cover', { autoAlpha: 0, duration: .35 }, .65)
+    .to('#final > div', { opacity: 1, y: 0, duration: .35 }, .85);
+})();
+</script>
+</body>
+</html>
