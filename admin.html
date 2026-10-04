@@ -118,6 +118,7 @@
   dialog form { padding: 26px; display: grid; gap: 14px; }
   dialog h2 { font-size: 1.5rem; }
   dialog ol { padding-left: 1.2em; color: var(--muted); font-size: .88rem; display: grid; gap: 4px; }
+  .s-error { background: #fdecea; color: var(--danger); border-radius: 10px; padding: 10px 12px; font-size: .88rem; }
   dialog .btns { display: flex; gap: 10px; justify-content: flex-end; flex-wrap: wrap; margin-top: 6px; }
 
   .toast { position: fixed; left: 50%; bottom: 84px; transform: translate(-50%, 20px); opacity: 0; background: var(--night); color: #fff; padding: 12px 18px; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,.25); transition: opacity .25s, transform .25s; z-index: 100; max-width: calc(100vw - 32px); }
@@ -273,6 +274,7 @@
       <label class="f">Branch<input id="s-branch" required></label>
     </div>
     <label class="f">Token GitHub<input id="s-token" type="password" placeholder="github_pat_…"></label>
+    <p class="s-error" id="s-error" role="alert" hidden></p>
     <div class="btns">
       <button class="btn danger" value="logout" id="s-logout" type="button">Deconectează</button>
       <button class="btn" value="cancel" formnovalidate>Anulează</button>
@@ -353,26 +355,33 @@
   };
 
   // ---------- GitHub API ----------
-  async function gh(path, opts = {}, cfg = config) {
-    const res = await fetch(`https://api.github.com/repos/${encodeURIComponent(cfg.owner)}/${encodeURIComponent(cfg.repo)}/${path}`, {
-      ...opts,
-      headers: {
-        Accept: 'application/vnd.github+json',
-        Authorization: `Bearer ${cfg.token}`,
-        'X-GitHub-Api-Version': '2022-11-28',
-        ...(opts.body ? { 'Content-Type': 'application/json' } : {}),
-      },
-    });
+  async function gh(path, opts = {}, cfg = config, root) {
+    const url = root || `https://api.github.com/repos/${encodeURIComponent(cfg.owner)}/${encodeURIComponent(cfg.repo)}${path ? '/' + path : ''}`;
+    let res;
+    try {
+      res = await fetch(url, {
+        ...opts,
+        headers: {
+          Accept: 'application/vnd.github+json',
+          Authorization: `Bearer ${cfg.token}`,
+          'X-GitHub-Api-Version': '2022-11-28',
+          ...(opts.body ? { 'Content-Type': 'application/json' } : {}),
+        },
+      });
+    } catch (e) {
+      throw new Error('Nu m-am putut conecta la GitHub (verifică internetul sau dezactivează temporar extensiile de tip ad-blocker).');
+    }
     if (!res.ok) {
       let detail = '';
       try { detail = (await res.json()).message || ''; } catch {}
       const err = new Error(({
-        401: 'Token invalid sau expirat.',
-        403: 'Tokenul nu are permisiunea necesară (Contents: Read and write).',
-        404: 'Repo-ul, branch-ul sau fișierul nu a fost găsit (sau tokenul nu are acces la el).',
-        409: 'Conflict: fișierul a fost modificat între timp.',
-        422: 'GitHub a respins cererea: ' + detail,
-      })[res.status] || `Eroare GitHub ${res.status}: ${detail}`);
+        401: 'GitHub nu recunoaște tokenul: e greșit, incomplet sau expirat. Generează unul nou și copiază-l integral.',
+        403: 'Tokenul nu are voie să facă asta. Verifică la token: Repository access include acest repo și Permissions → Contents = Read and write.',
+        404: 'Nu găsesc repo-ul sau branch-ul, sau tokenul nu are acces la el. Verifică numele și ca la token să fie selectat acest repo.',
+        409: 'Conflict: fișierul a fost modificat între timp. Încearcă din nou.',
+        422: 'GitHub a respins cererea.',
+      })[res.status] || 'Eroare GitHub.') ;
+      err.message += ` [${res.status}${detail ? ': ' + detail : ''}]`;
       err.status = res.status;
       throw err;
     }
@@ -694,6 +703,7 @@
     $('s-repo').value = config.repo;
     $('s-branch').value = config.branch;
     $('s-token').value = config.token;
+    $('s-error').hidden = true;
     $('settings').showModal();
   }
   $('s-save').addEventListener('click', async () => {
@@ -701,15 +711,21 @@
       owner: $('s-owner').value.trim(),
       repo: $('s-repo').value.trim(),
       branch: $('s-branch').value.trim() || 'master',
-      token: $('s-token').value.trim(),
+      // remove spaces, line breaks and invisible characters picked up when copying
+      token: $('s-token').value.replace(/[\s\u200B-\u200D\uFEFF]/g, ''),
     };
-    if (!next.owner || !next.repo || !next.token) { toast('Completează utilizatorul, repo-ul și tokenul.', true); return; }
+    const fail = msg => { $('s-error').textContent = msg; $('s-error').hidden = false; };
+    $('s-error').hidden = true;
+    if (!next.owner || !next.repo || !next.token) { fail('Completează utilizatorul, repo-ul și tokenul.'); return; }
+    if (!/^[\x21-\x7E]+$/.test(next.token)) { fail('Tokenul conține caractere nepermise. Copiază-l din nou de pe GitHub.'); return; }
     $('s-save').disabled = true;
     $('s-save').textContent = 'Se verifică…';
     try {
-      const repo = await gh('', {}, next);
-      if (!repo.permissions || !repo.permissions.push) throw new Error('Tokenul nu are drept de scriere pe acest repo.');
-      await gh(`branches/${encodeURIComponent(next.branch)}`, {}, next);
+      try { await gh('', {}, next, 'https://api.github.com/user'); }
+      catch (e) { if (e.status === 401) throw e; }
+      await gh('', {}, next);
+      try { await gh(`branches/${encodeURIComponent(next.branch)}`, {}, next); }
+      catch (e) { if (e.status === 404) throw new Error(`Branch-ul „${next.branch}” nu există în repo.`); throw e; }
       config = next;
       saveConfig(config);
       $('settings').close();
@@ -717,7 +733,7 @@
       await loadPosts();
       updateStatus();
     } catch (e) {
-      toast(e.message, true);
+      fail(e.message);
     } finally {
       $('s-save').disabled = false;
       $('s-save').textContent = 'Testează și salvează';
