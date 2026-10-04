@@ -30,21 +30,6 @@
   }
   h1, h2, h3 { font-family: "Playfair Display", Georgia, serif; line-height: 1.15; }
 
-  /* ---------- NAV ---------- */
-  nav {
-    position: fixed; inset: 0 0 auto 0; z-index: 50;
-    display: flex; justify-content: space-between; align-items: center;
-    padding: 18px clamp(16px, 4vw, 48px);
-    transition: background .3s, box-shadow .3s, padding .3s;
-  }
-  nav.solid { background: rgba(251,247,240,.92); backdrop-filter: blur(8px); box-shadow: 0 2px 20px rgba(0,0,0,.08); padding-block: 12px; }
-  nav .logo { font-family: "Playfair Display", serif; font-weight: 800; font-size: 1.3rem; color: #fff; text-decoration: none; transition: color .3s; }
-  nav.solid .logo { color: var(--ink); }
-  nav ul { list-style: none; display: flex; gap: clamp(12px, 2.5vw, 32px); }
-  nav a.link { color: rgba(255,255,255,.9); text-decoration: none; font-weight: 500; font-size: .95rem; transition: color .3s; }
-  nav.solid a.link { color: var(--ink); }
-  nav a.link:hover { color: var(--gold); }
-  @media (max-width: 640px) { nav ul { display: none; } }
 
   /* ---------- HERO PARALLAX ---------- */
   .hero {
@@ -163,16 +148,19 @@
     .scroll-cue span { animation: none; }
   }
 </style>
+<link rel="stylesheet" href="assets/nav.css">
 </head>
 <body>
 
-<nav id="nav">
-  <a class="logo" href="#top">Timișoara</a>
-  <ul>
-    <li><a class="link" href="#despre">Despre</a></li>
-    <li><a class="link" href="#istorie">Istorie</a></li>
-    <li><a class="link" href="#locuri">Locuri</a></li>
-    <li><a class="link" href="#cifre">Cifre</a></li>
+<nav class="site-nav" id="nav" aria-label="Meniu principal">
+  <a class="logo" href="index.html">Timișoara</a>
+  <button class="nav-toggle" type="button" aria-label="Deschide meniul" aria-expanded="false" aria-controls="nav-links"><span></span><span></span><span></span></button>
+  <ul id="nav-links">
+    <li><a class="link" href="index.html">Acasă</a></li>
+    <li><a class="link" href="index.html#despre">Despre</a></li>
+    <li><a class="link" href="index.html#istorie">Istorie</a></li>
+    <li><a class="link" href="index.html#locuri">Locuri</a></li>
+    <li class="sep" aria-hidden="true"></li>
     <li><a class="link" href="poveste.html">Poveste</a></li>
     <li><a class="link" href="blog.html">Blog</a></li>
   </ul>
@@ -390,14 +378,12 @@
 <script>
 (() => {
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const nav = document.getElementById('nav');
   const hero = document.querySelector('.hero');
   const heroLayers = hero.querySelectorAll('[data-speed]');
   const others = [...document.querySelectorAll('[data-speed]')].filter(el => !hero.contains(el));
 
   function update() {
     const y = scrollY, vh = innerHeight;
-    nav.classList.toggle('solid', y > vh * 0.6);
     if (reduce) return;
 
     // Hero: layers move at different speeds relative to page scroll
@@ -471,5 +457,6 @@ Blog.loadPosts().then(posts => {
   grid.querySelectorAll('.card').forEach(c => io.observe(c));
 }).catch(() => {});
 </script>
+<script src="assets/nav.js"></script>
 </body>
 </html>

@@ -25,17 +25,6 @@
   h1, h2, h3 { font-family: "Playfair Display", Georgia, serif; line-height: 1.15; }
   a { color: inherit; }
 
-  nav {
-    position: fixed; inset: 0 0 auto 0; z-index: 50;
-    display: flex; justify-content: space-between; align-items: center;
-    padding: 18px clamp(16px, 4vw, 48px); transition: background .3s, box-shadow .3s, padding .3s;
-  }
-  nav.solid { background: rgba(251,247,240,.92); backdrop-filter: blur(8px); box-shadow: 0 2px 20px rgba(0,0,0,.08); padding-block: 12px; }
-  nav .logo { font-family: "Playfair Display", serif; font-weight: 800; font-size: 1.3rem; color: #fff; text-decoration: none; transition: color .3s; }
-  nav ul { list-style: none; display: flex; gap: clamp(14px, 2.5vw, 32px); }
-  nav a.link { color: rgba(255,255,255,.9); text-decoration: none; font-weight: 500; font-size: .95rem; transition: color .3s; }
-  nav.solid .logo, nav.solid a.link { color: var(--ink); }
-  nav a.link:hover { color: var(--gold); }
 
   /* ---------- HEADER PARALLAX ---------- */
   .head {
@@ -110,13 +99,19 @@
   footer a { color: var(--gold); }
   [hidden] { display: none !important; }
 </style>
+<link rel="stylesheet" href="assets/nav.css">
 </head>
 <body>
 
-<nav id="nav">
+<nav class="site-nav" id="nav" aria-label="Meniu principal">
   <a class="logo" href="index.html">Timișoara</a>
-  <ul>
+  <button class="nav-toggle" type="button" aria-label="Deschide meniul" aria-expanded="false" aria-controls="nav-links"><span></span><span></span><span></span></button>
+  <ul id="nav-links">
     <li><a class="link" href="index.html">Acasă</a></li>
+    <li><a class="link" href="index.html#despre">Despre</a></li>
+    <li><a class="link" href="index.html#istorie">Istorie</a></li>
+    <li><a class="link" href="index.html#locuri">Locuri</a></li>
+    <li class="sep" aria-hidden="true"></li>
     <li><a class="link" href="poveste.html">Poveste</a></li>
     <li><a class="link" href="blog.html">Blog</a></li>
   </ul>
@@ -200,14 +195,12 @@
   const metaHtml = p => `<span>${escapeHtml(formatDate(p.date))}</span>${p.author ? `<span>${escapeHtml(p.author)}</span>` : ''}<span>${readingTime(p.content)}</span>`;
 
   // ---------- parallax ----------
-  const nav = $('nav');
   let layers = [];
   function collectLayers() {
     layers = [...document.querySelectorAll('main:not([hidden]) [data-speed]')];
   }
   function onScroll() {
     const y = scrollY;
-    nav.classList.toggle('solid', y > innerHeight * 0.4);
     if (reduce) return;
     if (y > innerHeight * 1.2) return;
     layers.forEach(el => { el.style.transform = `translate3d(0, ${y * parseFloat(el.dataset.speed)}px, 0)`; });
@@ -292,5 +285,6 @@
   }).finally(() => { collectLayers(); onScroll(); });
 })();
 </script>
+<script src="assets/nav.js"></script>
 </body>
 </html>
