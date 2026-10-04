@@ -1,0 +1,295 @@
+<!doctype html>
+<html lang="ro">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Blog Timișoara</title>
+<meta name="description" content="Jurnal de Timișoara: articole despre istoria, locurile și viața din Orașul Florilor.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,800;1,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #1d1a2b;
+    --paper: #fbf7f0;
+    --muted: #6b6478;
+    --accent: #c8553d;
+    --gold: #e9b44c;
+    --green: #2e6b5e;
+    --night: #141226;
+    --card: #ffffff;
+    --line: #e8e0d2;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: "Inter", system-ui, sans-serif; background: var(--paper); color: var(--ink); line-height: 1.65; overflow-x: hidden; }
+  h1, h2, h3 { font-family: "Playfair Display", Georgia, serif; line-height: 1.15; }
+  a { color: inherit; }
+
+  nav {
+    position: fixed; inset: 0 0 auto 0; z-index: 50;
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 18px clamp(16px, 4vw, 48px); transition: background .3s, box-shadow .3s, padding .3s;
+  }
+  nav.solid { background: rgba(251,247,240,.92); backdrop-filter: blur(8px); box-shadow: 0 2px 20px rgba(0,0,0,.08); padding-block: 12px; }
+  nav .logo { font-family: "Playfair Display", serif; font-weight: 800; font-size: 1.3rem; color: #fff; text-decoration: none; transition: color .3s; }
+  nav ul { list-style: none; display: flex; gap: clamp(14px, 2.5vw, 32px); }
+  nav a.link { color: rgba(255,255,255,.9); text-decoration: none; font-weight: 500; font-size: .95rem; transition: color .3s; }
+  nav.solid .logo, nav.solid a.link { color: var(--ink); }
+  nav a.link:hover { color: var(--gold); }
+
+  /* ---------- HEADER PARALLAX ---------- */
+  .head {
+    position: relative; height: 62vh; min-height: 420px; overflow: hidden; color: #fff;
+    background: linear-gradient(180deg, #2b2058 0%, #6a3a7a 45%, #e07a5f 85%, #f4c27a 100%);
+  }
+  .head .layer { position: absolute; left: 0; right: 0; bottom: 0; will-change: transform; }
+  .head .layer svg { display: block; width: 100%; height: 100%; }
+  .head .moon { position: absolute; right: 14%; top: 18%; width: 120px; height: 120px; border-radius: 50%; background: radial-gradient(circle, #ffe7a8 0%, #f9c56b 55%, rgba(249,197,107,0) 72%); will-change: transform; }
+  .head .text { position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 60px 16px 0; z-index: 3; will-change: transform; }
+  .head .kicker { letter-spacing: .3em; text-transform: uppercase; font-size: .78rem; opacity: .85; }
+  .head h1 { font-size: clamp(2.6rem, 8vw, 5.5rem); font-weight: 800; text-shadow: 0 6px 30px rgba(30,10,60,.4); }
+  .head p { font-family: "Playfair Display", serif; font-style: italic; font-size: clamp(1rem, 2vw, 1.2rem); opacity: .95; }
+
+  .wrap { max-width: 1120px; margin: 0 auto; padding: clamp(48px, 8vw, 88px) 16px; }
+
+  /* ---------- FILTERS ---------- */
+  .filters { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 36px; }
+  .chip { border: 1px solid var(--line); background: var(--card); color: var(--ink); padding: 7px 16px; border-radius: 999px; font: 500 .9rem "Inter", sans-serif; cursor: pointer; transition: background .2s, color .2s, border-color .2s; }
+  .chip:hover { border-color: var(--accent); }
+  .chip.active { background: var(--ink); color: #fff; border-color: var(--ink); }
+
+  /* ---------- LIST ---------- */
+  .featured { display: grid; grid-template-columns: 1.15fr 1fr; background: var(--card); border-radius: 24px; overflow: hidden; box-shadow: 0 14px 40px rgba(29,26,43,.1); text-decoration: none; margin-bottom: 32px; transition: transform .35s, box-shadow .35s; }
+  .featured:hover { transform: translateY(-6px); box-shadow: 0 24px 50px rgba(29,26,43,.16); }
+  .featured .cover { min-height: 320px; }
+  .featured .body { padding: clamp(24px, 4vw, 44px); display: flex; flex-direction: column; justify-content: center; }
+  .featured h2 { font-size: clamp(1.6rem, 3.2vw, 2.4rem); margin: 10px 0 12px; }
+  @media (max-width: 760px) { .featured { grid-template-columns: 1fr; } .featured .cover { min-height: 200px; } }
+
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 26px; }
+  .card { display: flex; flex-direction: column; background: var(--card); border-radius: 20px; overflow: hidden; box-shadow: 0 10px 30px rgba(29,26,43,.08); text-decoration: none; transition: transform .35s, box-shadow .35s; }
+  .card:hover { transform: translateY(-6px); box-shadow: 0 22px 44px rgba(29,26,43,.15); }
+  .card .cover { height: 180px; }
+  .card .body { padding: 22px; display: flex; flex-direction: column; flex: 1; }
+  .card h3 { font-size: 1.3rem; margin: 8px 0; }
+  .excerpt { color: var(--muted); }
+  .meta { color: var(--muted); font-size: .85rem; display: flex; flex-wrap: wrap; gap: 6px 14px; }
+  .card .meta { margin-top: auto; padding-top: 14px; }
+  .tags { display: flex; flex-wrap: wrap; gap: 6px; }
+  .tag { color: var(--accent); font-weight: 600; font-size: .72rem; letter-spacing: .12em; text-transform: uppercase; }
+
+  .state { text-align: center; color: var(--muted); padding: 48px 0; }
+
+  /* ---------- ARTICLE ---------- */
+  .article-cover { position: relative; height: 72vh; min-height: 440px; overflow: hidden; color: #fff; display: flex; align-items: flex-end; }
+  .article-cover .bg { position: absolute; inset: -20% 0 0 0; will-change: transform; }
+  .article-cover::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(20,18,38,.15) 0%, rgba(20,18,38,.75) 100%); }
+  .article-cover .inner { position: relative; z-index: 2; max-width: 820px; margin: 0 auto; width: 100%; padding: 0 16px 56px; will-change: transform; }
+  .article-cover h1 { font-size: clamp(2.1rem, 6vw, 4rem); font-weight: 800; margin: 12px 0 16px; text-shadow: 0 4px 24px rgba(0,0,0,.3); }
+  .article-cover .tag { color: var(--gold); }
+  .article-cover .meta { color: rgba(255,255,255,.85); }
+
+  .prose { max-width: 720px; margin: 0 auto; padding: clamp(40px, 7vw, 72px) 16px; font-size: 1.12rem; }
+  .prose > * + * { margin-top: 1.1em; }
+  .prose h2 { font-size: 1.9rem; margin-top: 1.8em; }
+  .prose h3 { font-size: 1.4rem; margin-top: 1.5em; }
+  .prose a { color: var(--accent); }
+  .prose img { max-width: 100%; height: auto; border-radius: 16px; display: block; margin-inline: auto; }
+  .prose blockquote { border-left: 4px solid var(--gold); padding: 6px 0 6px 20px; font-family: "Playfair Display", serif; font-style: italic; font-size: 1.25rem; color: var(--ink); }
+  .prose ul, .prose ol { padding-left: 1.4em; }
+  .prose li + li { margin-top: .4em; }
+  .prose code { background: #efe7da; padding: 2px 6px; border-radius: 6px; font-size: .92em; }
+  .prose pre { background: var(--night); color: #f3ece0; padding: 18px; border-radius: 12px; overflow-x: auto; }
+  .prose pre code { background: none; padding: 0; }
+  .prose hr { border: 0; border-top: 1px solid var(--line); }
+  .back { display: inline-flex; gap: 8px; align-items: center; color: var(--accent); font-weight: 600; text-decoration: none; }
+  .article-foot { max-width: 720px; margin: 0 auto; padding: 0 16px 80px; border-top: 1px solid var(--line); padding-top: 28px; }
+
+  footer { background: var(--night); color: rgba(255,255,255,.75); text-align: center; padding: 48px 16px; font-size: .9rem; }
+  footer strong { color: #fff; font-family: "Playfair Display", serif; font-size: 1.4rem; display: block; margin-bottom: 6px; }
+  footer a { color: var(--gold); }
+  [hidden] { display: none !important; }
+</style>
+</head>
+<body>
+
+<nav id="nav">
+  <a class="logo" href="index.html">Timișoara</a>
+  <ul>
+    <li><a class="link" href="index.html">Acasă</a></li>
+    <li><a class="link" href="blog.html">Blog</a></li>
+  </ul>
+</nav>
+
+<!-- ================= LIST VIEW ================= -->
+<main id="list-view">
+  <header class="head">
+    <div class="moon" data-speed="0.2"></div>
+    <div class="layer" data-speed="0.35" style="height:55%">
+      <svg viewBox="0 0 1440 400" preserveAspectRatio="xMidYMax slice" aria-hidden="true">
+        <path fill="#b45f72" opacity=".55" d="M0 400V250h60v-40h50v60h40v-90h30l15-30 15 30h30v110h70v-70h80v-40h20v40h60v120h50v-80h90v-30h40v30h40v90h60V210h30l20-50 20 50h30v110h80v-60h70v-50h50v50h50v90h60v-120h40v-30h30v30h40v130h70v-80h60v100h60V400z"/>
+      </svg>
+    </div>
+    <div class="layer" data-speed="0.55" style="height:48%">
+      <svg viewBox="0 0 1440 360" preserveAspectRatio="xMidYMax slice" aria-hidden="true">
+        <g fill="#5b2d5e">
+          <rect x="560" y="170" width="320" height="190"/><rect x="680" y="70" width="80" height="110"/>
+          <polygon points="672,75 720,-40 768,75"/>
+          <rect x="590" y="120" width="60" height="60"/><polygon points="582,124 620,40 658,124"/>
+          <rect x="790" y="120" width="60" height="60"/><polygon points="782,124 820,40 858,124"/>
+          <polygon points="560,174 720,100 880,174"/>
+          <rect x="120" y="210" width="300" height="150"/><polygon points="110,214 270,160 430,214"/>
+          <rect x="1000" y="220" width="140" height="140"/><rect x="1150" y="190" width="110" height="170"/>
+          <rect x="1270" y="240" width="170" height="120"/><rect x="0" y="240" width="110" height="120"/>
+          <rect x="430" y="250" width="130" height="110"/><rect x="880" y="250" width="120" height="110"/>
+        </g>
+        <g fill="#ffd27a" opacity=".85"><circle cx="720" cy="230" r="18"/><rect x="612" y="140" width="14" height="26" rx="7"/><rect x="812" y="140" width="14" height="26" rx="7"/></g>
+      </svg>
+    </div>
+    <div class="layer" data-speed="0.8" style="height:22%">
+      <svg viewBox="0 0 1440 160" preserveAspectRatio="xMidYMax slice" aria-hidden="true">
+        <path fill="#2a1838" d="M0 160V70c40-30 80-40 120-10s70-50 130-25 90 20 120-10 90-25 140 20h500c40-45 100-40 140-10s90-40 140-20 70 30 150 0v135z"/>
+      </svg>
+    </div>
+    <div class="text" data-speed="-0.25">
+      <div class="kicker">Jurnal</div>
+      <h1>Blogul Timișoarei</h1>
+      <p>Povești, ghiduri și istorie din Orașul Florilor</p>
+    </div>
+  </header>
+
+  <div class="wrap">
+    <div class="filters" id="filters" hidden></div>
+    <div id="featured"></div>
+    <div class="grid" id="grid"></div>
+    <div class="state" id="state">Se încarcă articolele…</div>
+  </div>
+</main>
+
+<!-- ================= ARTICLE VIEW ================= -->
+<main id="article-view" hidden>
+  <header class="article-cover">
+    <div class="bg" id="a-bg" data-speed="0.4"></div>
+    <div class="inner" data-speed="-0.15">
+      <div class="tags" id="a-tags"></div>
+      <h1 id="a-title"></h1>
+      <div class="meta" id="a-meta"></div>
+    </div>
+  </header>
+  <article class="prose" id="a-content"></article>
+  <div class="article-foot"><a class="back" href="blog.html">← Toate articolele</a></div>
+</main>
+
+<footer>
+  <strong>Timișoara</strong>
+  <a href="index.html">Acasă</a> · <a href="blog.html">Blog</a>
+</footer>
+
+<script src="assets/vendor/marked.min.js"></script>
+<script src="assets/vendor/purify.min.js"></script>
+<script src="assets/posts.js"></script>
+<script>
+(() => {
+  const { escapeHtml, coverStyle, formatDate, readingTime, loadPosts } = Blog;
+  const $ = id => document.getElementById(id);
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const slug = new URLSearchParams(location.search).get('p');
+  const postUrl = p => 'blog.html?p=' + encodeURIComponent(p.slug);
+  const tagsHtml = p => (p.tags || []).map(t => `<span class="tag">${escapeHtml(t)}</span>`).join('');
+  const metaHtml = p => `<span>${escapeHtml(formatDate(p.date))}</span>${p.author ? `<span>${escapeHtml(p.author)}</span>` : ''}<span>${readingTime(p.content)}</span>`;
+
+  // ---------- parallax ----------
+  const nav = $('nav');
+  let layers = [];
+  function collectLayers() {
+    layers = [...document.querySelectorAll('main:not([hidden]) [data-speed]')];
+  }
+  function onScroll() {
+    const y = scrollY;
+    nav.classList.toggle('solid', y > innerHeight * 0.4);
+    if (reduce) return;
+    if (y > innerHeight * 1.2) return;
+    layers.forEach(el => { el.style.transform = `translate3d(0, ${y * parseFloat(el.dataset.speed)}px, 0)`; });
+  }
+  let ticking = false;
+  addEventListener('scroll', () => {
+    if (!ticking) { requestAnimationFrame(() => { onScroll(); ticking = false; }); ticking = true; }
+  }, { passive: true });
+
+  // ---------- views ----------
+  function renderList(posts) {
+    const tags = [...new Set(posts.flatMap(p => p.tags || []))].sort((a, b) => a.localeCompare(b, 'ro'));
+    let active = null;
+
+    const filters = $('filters');
+    if (tags.length) {
+      filters.hidden = false;
+      filters.innerHTML = ['<button class="chip active" data-tag="">Toate</button>']
+        .concat(tags.map(t => `<button class="chip" data-tag="${escapeHtml(t)}">${escapeHtml(t)}</button>`)).join('');
+      filters.addEventListener('click', e => {
+        const btn = e.target.closest('.chip');
+        if (!btn) return;
+        active = btn.dataset.tag || null;
+        filters.querySelectorAll('.chip').forEach(c => c.classList.toggle('active', c === btn));
+        draw();
+      });
+    }
+
+    function draw() {
+      const list = active ? posts.filter(p => (p.tags || []).includes(active)) : posts;
+      $('state').hidden = list.length > 0;
+      $('state').textContent = 'Nu există încă articole.';
+      const [first, ...rest] = list;
+      $('featured').innerHTML = first ? `
+        <a class="featured" href="${postUrl(first)}">
+          <div class="cover" style="${escapeHtml(coverStyle(first))}"></div>
+          <div class="body">
+            <div class="tags">${tagsHtml(first)}</div>
+            <h2>${escapeHtml(first.title)}</h2>
+            <p class="excerpt">${escapeHtml(first.excerpt)}</p>
+            <div class="meta" style="margin-top:18px">${metaHtml(first)}</div>
+          </div>
+        </a>` : '';
+      $('grid').innerHTML = rest.map(p => `
+        <a class="card" href="${postUrl(p)}">
+          <div class="cover" style="${escapeHtml(coverStyle(p))}"></div>
+          <div class="body">
+            <div class="tags">${tagsHtml(p)}</div>
+            <h3>${escapeHtml(p.title)}</h3>
+            <p class="excerpt">${escapeHtml(p.excerpt)}</p>
+            <div class="meta">${metaHtml(p)}</div>
+          </div>
+        </a>`).join('');
+    }
+    draw();
+  }
+
+  function renderArticle(post) {
+    $('list-view').hidden = true;
+    $('article-view').hidden = false;
+    document.title = post.title + ' · Blog Timișoara';
+    $('a-bg').setAttribute('style', coverStyle(post));
+    $('a-tags').innerHTML = tagsHtml(post);
+    $('a-title').textContent = post.title;
+    $('a-meta').innerHTML = metaHtml(post);
+    $('a-content').innerHTML = DOMPurify.sanitize(marked.parse(post.content || ''));
+  }
+
+  function renderMissing() {
+    $('state').innerHTML = 'Articolul nu a fost găsit. <a href="blog.html">Vezi toate articolele</a>';
+  }
+
+  loadPosts().then(posts => {
+    if (slug) {
+      const post = posts.find(p => p.slug === slug);
+      post ? renderArticle(post) : renderMissing();
+    } else {
+      renderList(posts);
+    }
+  }).catch(err => {
+    $('state').textContent = err.message;
+  }).finally(() => { collectLayers(); onScroll(); });
+})();
+</script>
+</body>
+</html>

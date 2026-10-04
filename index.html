@@ -141,6 +141,10 @@
   .card .art { height: 170px; position: relative; overflow: hidden; }
   .card .art svg { position: absolute; inset: -20% 0 0 0; width: 100%; height: 120%; will-change: transform; }
   .card .body { padding: 22px; }
+  a.card { display: block; text-decoration: none; color: inherit; }
+  .card .cover { height: 170px; }
+  .card .tag { color: var(--accent); font-weight: 600; font-size: .72rem; letter-spacing: .12em; text-transform: uppercase; margin-right: 8px; }
+  .card .date { color: var(--muted); font-size: .85rem; margin-top: 12px; }
   .card h3 { font-size: 1.3rem; margin-bottom: 6px; }
   .card p { color: var(--muted); font-size: .95rem; }
 
@@ -169,6 +173,7 @@
     <li><a class="link" href="#istorie">Istorie</a></li>
     <li><a class="link" href="#locuri">Locuri</a></li>
     <li><a class="link" href="#cifre">Cifre</a></li>
+    <li><a class="link" href="blog.html">Blog</a></li>
   </ul>
 </nav>
 
@@ -366,9 +371,19 @@
   </div>
 </section>
 
+<!-- ================= DIN BLOG ================= -->
+<section class="places" id="blog" hidden>
+  <div class="wrap">
+    <div class="eyebrow">Din blog</div>
+    <h2>Cele mai noi articole</h2>
+    <div class="grid" id="latest-posts"></div>
+    <p style="margin-top:32px"><a href="blog.html" style="color:var(--accent);font-weight:600;text-decoration:none">Toate articolele →</a></p>
+  </div>
+</section>
+
 <footer>
   <strong>Timișoara</strong>
-  Făcut cu drag pentru Orașul Florilor · <a href="#top" style="color:var(--gold)">Înapoi sus ↑</a>
+  Făcut cu drag pentru Orașul Florilor · <a href="blog.html" style="color:var(--gold)">Blog</a> · <a href="#top" style="color:var(--gold)">Înapoi sus ↑</a>
 </footer>
 
 <script>
@@ -431,6 +446,29 @@
   }, { threshold: 0.2 });
   document.querySelectorAll('.event, .card, [data-count]').forEach(el => io.observe(el));
 })();
+</script>
+<script src="assets/posts.js"></script>
+<script>
+// Latest blog posts on the home page
+Blog.loadPosts().then(posts => {
+  const latest = posts.slice(0, 3);
+  if (!latest.length) return;
+  const { escapeHtml, coverStyle, formatDate } = Blog;
+  const grid = document.getElementById('latest-posts');
+  grid.innerHTML = latest.map(p => `
+    <a class="card" href="blog.html?p=${encodeURIComponent(p.slug)}">
+      <div class="cover" style="${escapeHtml(coverStyle(p))}"></div>
+      <div class="body">
+        <div>${(p.tags || []).map(t => `<span class="tag">${escapeHtml(t)}</span>`).join('')}</div>
+        <h3>${escapeHtml(p.title)}</h3>
+        <p>${escapeHtml(p.excerpt)}</p>
+        <div class="date">${escapeHtml(formatDate(p.date))}</div>
+      </div>
+    </a>`).join('');
+  document.getElementById('blog').hidden = false;
+  const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('show'); io.unobserve(e.target); } }), { threshold: 0.2 });
+  grid.querySelectorAll('.card').forEach(c => io.observe(c));
+}).catch(() => {});
 </script>
 </body>
 </html>
